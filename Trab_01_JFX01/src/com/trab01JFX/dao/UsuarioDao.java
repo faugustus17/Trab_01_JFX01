@@ -62,6 +62,7 @@ public class UsuarioDao {
 			try{
 				sql = "INSERT INTO tb_usuarios(nome_usuario, usuario, senha) VALUES(";
 				sql+="'"+usuario.getNome_usuario()+"','"+usuario.getUsuario()+"','"+usuario.getSenha()+"')";
+				st = conn.createStatement();
 				int rst = st.executeUpdate(sql);
 				if (rst == 1){
 					retorno = 1;

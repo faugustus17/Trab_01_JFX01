@@ -8,21 +8,6 @@ import javafx.scene.Scene;
 
 public class Main extends Application {
 	public Stage stage;
-	/*@Override
-	public void start(Stage primaryStage) {
-		try {
-			stage = primaryStage;
-			Parent parent = FXMLLoader.load(getClass().getResource("/com/trab01JFX/view/Login.fxml"));
-			Scene scene = new Scene(parent);
-			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setScene(scene);
-			primaryStage.setTitle("Tela de Login");
-			primaryStage.show();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}*/
-	
 	private static Stage primaryStage; 
 	private static Class<? extends Main> thisClass;
 	

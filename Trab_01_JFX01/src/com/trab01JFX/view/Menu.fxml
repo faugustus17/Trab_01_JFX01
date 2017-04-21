@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -20,6 +21,11 @@
                         <MenuItem fx:id="menuItemProfissao" mnemonicParsing="false" onAction="#onActionMenuItemProfissao" text="Profissões" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Sair">
+                    <items>
+                      <MenuItem fx:id="menuItemSair" mnemonicParsing="false" onAction="#onActionMenuSair" text="Sair" />
+                    </items>
+                  </Menu>
               </menus>
             </MenuBar>
             <ImageView fx:id="img01" fitHeight="392.0" fitWidth="474.0" layoutX="172.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
@@ -27,6 +33,7 @@
                   <Image url="@../../../../../../../Pictures/Darth%20Vader.jpg" />
                </image>
             </ImageView>
+            <Button fx:id="btnSair" layoutX="714.0" layoutY="542.0" mnemonicParsing="false" onAction="#onActionBtnSair" text="Sair" />
          </children>
       </Pane>
    </children>
