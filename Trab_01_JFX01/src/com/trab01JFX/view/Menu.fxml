@@ -3,13 +3,14 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Pane?>
 
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="com.trab01JFX.controller.MenuController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trab01JFX.controller.MenuController">
    <children>
-      <VBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="14.0" AnchorPane.topAnchor="14.0">
+      <Pane fx:id="pane" prefHeight="600.0" prefWidth="800.0">
          <children>
             <MenuBar>
               <menus>
@@ -21,7 +22,12 @@
                 </Menu>
               </menus>
             </MenuBar>
+            <ImageView fx:id="img01" fitHeight="392.0" fitWidth="474.0" layoutX="172.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../../Pictures/Darth%20Vader.jpg" />
+               </image>
+            </ImageView>
          </children>
-      </VBox>
+      </Pane>
    </children>
 </AnchorPane>
