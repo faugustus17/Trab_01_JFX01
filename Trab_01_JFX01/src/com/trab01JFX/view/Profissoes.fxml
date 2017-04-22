@@ -16,12 +16,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="com.trab01JFX.controller.ProfissoesController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.trab01JFX.controller.ProfissoesController">
    <children>
       <Pane prefHeight="510.0" prefWidth="701.0">
          <children>
-            <TabPane prefHeight="510.0" prefWidth="700.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="tabPane" prefHeight="510.0" prefWidth="700.0" tabClosingPolicy="UNAVAILABLE">
                <tabs>
                   <Tab fx:id="tabCadastro" text="Cadastro">
                      <content>
@@ -92,7 +91,7 @@
                            <children>
                               <TextField fx:id="txtPesquisaProfissao" layoutX="95.0" layoutY="51.0" prefHeight="25.0" prefWidth="431.0" promptText="Entre com a PROFISSÃO ou PARTE DA PROFISSÃO a ser consultada" />
                               <Button fx:id="btnConsultarProfissao" layoutX="539.0" layoutY="51.0" mnemonicParsing="false" onAction="#onActionBtnConsultarProfissao" text="Consultar" />
-                              <TableView layoutX="94.0" layoutY="116.0" prefHeight="309.0" prefWidth="512.0">
+                              <TableView fx:id="tabViewPesqProfissao" layoutX="94.0" layoutY="116.0" prefHeight="309.0" prefWidth="512.0">
                                  <columns>
                                     <TableColumn fx:id="colCodProfissao" prefWidth="121.0" text="Código" />
                                     <TableColumn fx:id="colNomeProfissao" prefWidth="390.0" text="Profissão" />
