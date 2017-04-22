@@ -37,12 +37,12 @@ public class ProfissaoDao {
 	}
 	
 	//Lista todas as Profissões
-	public ArrayList<Profissoes> listaTudo(){
+	public ArrayList<Profissoes> listaTudo(String descricao){
 		Profissoes p;
 		ArrayList<Profissoes> alP = new ArrayList<Profissoes>();
 		try{
 			st = conn.createStatement();
-			rs = st.executeQuery("SELECT * FROM tb_profissoes ORDER BY descricao");
+			rs = st.executeQuery("SELECT * FROM tb_profissoes WHERE descricao LIKE '%"+descricao+"' ORDER BY descricao");
 			while(rs.next()){
 				p = new Profissoes();
 				p.setCod_profissao(rs.getInt("cod_profissao"));

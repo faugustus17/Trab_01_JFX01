@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 import com.trab01JFX.dao.ProfissaoDao;
 import com.trab01JFX.modelo.Profissoes;
 import com.trab01JFX.util.Util;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -16,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -78,9 +78,18 @@ public class ProfissoesController implements Initializable{
     	String descricao = this.txtPesquisaProfissao.getText();
     	if(descricao == null){
     		descricao = "";
+    	}else{
     		try{
-    			pesquisaEPreparaTableView();
-    		}catch (SQLException e) {
+    			ProfissaoDao pD = new ProfissaoDao();
+    			ArrayList<Profissoes> al = new ArrayList<Profissoes>();
+    			ObservableList<Profissoes> ob = FXCollections.observableArrayList(al);
+    			this.tabViewPesqProfissao.setItems(ob);
+    			al = pD.listaTudo(descricao);
+    			ob = FXCollections.observableArrayList(al);
+    			this.tabViewPesqProfissao.setItems(ob);
+    			this.colCodProfissao.setCellValueFactory(new PropertyValueFactory<Profissoes, Integer>("cod_profissao"));
+    			this.colNomeProfissao.setCellValueFactory(new PropertyValueFactory<Profissoes, String>("descricao"));
+    		}catch (Exception e) {
 				Util.mensagemErro("Erro: "+e.getMessage());
 			}
     	}
@@ -160,23 +169,9 @@ public class ProfissoesController implements Initializable{
     	this.limpaTela();
     }
     
-    public void pesquisaEPreparaTableView() throws SQLException{
-    	ArrayList<Profissoes> al = new ArrayList<Profissoes>();
-    	ObservableList<Profissoes> ob = FXCollections.observableArrayList(al);
-		this.tabViewPesqProfissao.setItems(ob);
-		ProfissaoDao pD = new ProfissaoDao();
-		ArrayList<Profissoes> alProf = new ArrayList<Profissoes>();
-		
-		alProf = pD.listaTudo();
-		ob = FXCollections.observableArrayList(alProf);
-		this.tabViewPesqProfissao.setItems(ob);
-		this.colCodProfissao.setCellValueFactory(new PropertyValueFactory<Profissoes, Integer>("cod_profissao"));
-		this.colNomeProfissao.setCellValueFactory(new PropertyValueFactory<Profissoes, String>("descricao"));
-    }
-
-	@Override
+    @Override
 	public void initialize(URL location, ResourceBundle resources) {
-		tabViewPesqProfissao.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+		this.tabViewPesqProfissao.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				if(tabViewPesqProfissao.getSelectionModel().getSelectedItem() != null){
@@ -196,6 +191,8 @@ public class ProfissoesController implements Initializable{
 	public void alimentaTabCadastro(Profissoes p) throws SQLException{
 		this.txtCodProfissao.setText(Integer.toString(p.getCod_profissao()));
 		this.txtDesProfissao.setText(p.getDescricao());
+		SingleSelectionModel<Tab> sl = tabPane.getSelectionModel();
+		sl.select(tabCadastro);
 	}
 	
 	public void limpaTela(){
