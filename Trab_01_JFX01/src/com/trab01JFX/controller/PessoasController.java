@@ -9,6 +9,9 @@ import com.trab01JFX.dao.ProfissaoDao;
 import com.trab01JFX.modelo.Pessoas;
 import com.trab01JFX.modelo.Profissoes;
 import com.trab01JFX.util.Util;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -216,8 +219,50 @@ public class PessoasController implements Initializable{
     
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		this.preencheCmbBox();
+		this.tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+			@Override
+			public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+				if(newValue == tabCadastro){
+					preencheCmbBox();
+				}
+			}	
+		});
 		
+		this.cmbProfPessoa.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				Profissoes p = new Profissoes();
+				ProfissaoDao pD = new ProfissaoDao();
+				try{
+					p = pD.consultaPorProfissao(newValue);
+				}catch (Exception e) {
+					Util.mensagemErro("Erro: "+e.getMessage());
+				}
+				if(p != null){
+					
+				}
+			}
+		});
 		
+		this.tabView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				if(tabView.getSelectionModel().selectedItemProperty() != null){
+					Pessoas p = new Pessoas();
+					p.setCod_pessoa(tabView.getSelectionModel().getSelectedItem().getCod_pessoa());
+					p.setNome_pessoa(tabView.getSelectionModel().getSelectedItem().getNome_pessoa());
+					p.setCpf(tabView.getSelectionModel().getSelectedItem().getCpf());
+					p.setData_nascimento(tabView.getSelectionModel().getSelectedItem().getData_nascimento());
+					p.setCod_profissao(tabView.getSelectionModel().getSelectedItem().getCod_profissao());
+					try{
+						preencheTabCadastro(p);
+					}catch (Exception e) {
+						Util.mensagemErro("Erro: "+e.getMessage());
+					}
+				}
+			}
+		});
 	}
 	
 	public void preencheCmbBox() {
