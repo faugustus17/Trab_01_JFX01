@@ -3,8 +3,10 @@ package com.trab01JFX.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
+import java.util.Date;
 import com.mysql.jdbc.Connection;
 import com.trab01JFX.modelo.Pessoas;
 import com.trab01JFX.util.Util;
@@ -14,6 +16,9 @@ public class PessoaDao {
 	Connection conn = conexao.abreConexaoBD();
 	ResultSet rs = null;
 	Statement st = null;
+	
+	String FORMATO_DATA = "dd/MM/yyyy";
+	SimpleDateFormat FORMATADOR = new SimpleDateFormat(FORMATO_DATA);
 	
 	//Consulta se Pessoa ja existe no BD
 	public int consultaPessoa(String nome){
@@ -55,11 +60,14 @@ public class PessoaDao {
 				p.setCod_pessoa(rs.getInt("cod_pessoa"));
 				p.setCpf(rs.getString("cpf"));
 				p.setNome_pessoa(rs.getString("nome_pessoa"));
-				p.setData_nascimento(rs.getDate("data_nascimento"));
+				Date data = FORMATADOR.parse(rs.getString("data_nascimento"));
+				p.setData_nascimento(data);
 				p.setCod_profissao(rs.getInt("cod_profissao"));
 				alP.add(p);
 			}
 		}catch (SQLException e) {
+			Util.mensagemErro("Erro: "+e.getMessage());
+		}catch (ParseException e) {
 			Util.mensagemErro("Erro: "+e.getMessage());
 		}
 		return alP;
@@ -79,11 +87,14 @@ public class PessoaDao {
 				p.setCod_pessoa(rs.getInt("cod_pessoa"));
 				p.setCpf(rs.getString("cpf"));
 				p.setNome_pessoa(rs.getString("nome_pessoa"));
-				p.setData_nascimento(rs.getDate("data_nascimento"));
+				Date data = FORMATADOR.parse(rs.getString("data_nascimento"));
+				p.setData_nascimento(data);
 				p.setCod_profissao(rs.getInt("cod_profissao"));
 				alP.add(p);
 			}
 		}catch (SQLException e) {
+			Util.mensagemErro("Erro: "+e.getMessage());
+		}catch (ParseException e) {
 			Util.mensagemErro("Erro: "+e.getMessage());
 		}
 		return alP;
@@ -99,7 +110,8 @@ public class PessoaDao {
 		}else{
 			try{
 				sql = "INSERT INTO tb_pessoas(cpf, nome_pessoa, data_nascimento, cod_profissao VALUES ( '";
-				sql += pessoa.getCpf()+"'"+"'"+pessoa.getNome_pessoa()+"'"+"'"+pessoa.getData_nascimento()+"'";
+				String data = FORMATADOR.format(pessoa.getData_nascimento());
+				sql += pessoa.getCpf()+"'"+"'"+pessoa.getNome_pessoa()+"'"+"'"+data+"'";
 				sql += pessoa.getCod_profissao();
 				st = conn.createStatement();
 				int rst = st.executeUpdate(sql);
@@ -119,13 +131,14 @@ public class PessoaDao {
 	}
 	
 	//Altera uma Pessoa no BD
-	public boolean alteraPesso(Pessoas pessoa){
+	public boolean alteraPessoa(Pessoas pessoa){
 		boolean retorno = false;
 		String sql= null;
 		try{
 			sql = "UPDATE tb_pessoas SET cpf = "+pessoa.getCpf();
 			sql += " nome_pessoa= '"+pessoa.getNome_pessoa()+"'";
-			sql += " data_nascimento= '"+pessoa.getData_nascimento()+"'";
+			String data = FORMATADOR.format(pessoa.getData_nascimento());
+			sql += " data_nascimento= '"+data+"'";
 			sql += " cod_profissao= "+pessoa.getCod_profissao();
 			st = conn.createStatement();
 			int rst = st.executeUpdate(sql);

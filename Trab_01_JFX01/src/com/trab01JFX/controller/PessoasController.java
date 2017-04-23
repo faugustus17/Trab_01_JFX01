@@ -1,15 +1,14 @@
 package com.trab01JFX.controller;
 
 import java.net.URL;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import com.trab01JFX.dao.PessoaDao;
 import com.trab01JFX.dao.ProfissaoDao;
 import com.trab01JFX.modelo.Pessoas;
 import com.trab01JFX.modelo.Profissoes;
 import com.trab01JFX.util.Util;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,11 +16,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 
 public class PessoasController implements Initializable{
@@ -92,28 +93,127 @@ public class PessoasController implements Initializable{
 
     @FXML
     void onActionBtnEditarPessoa(ActionEvent event) {
-
+    	String msg = "";
+    	if(Util.stringVaziaOuNula(this.txtNomePesoa.getText())){
+    		msg = "Informe o nome da pessoa";
+    	}
+    	if(Util.stringVaziaOuNula(this.txtCPFPessoa.getText())){
+    		msg += "Informe o cpf da pessoa";
+    	}
+    	if(Util.stringVaziaOuNula(this.txtDataNascPessoa.getText())){
+    		msg += "Informe o cpf da pessoa";
+    	}
+    	if(msg.equals("")){
+    		Pessoas p = new Pessoas();
+    		PessoaDao pD = new PessoaDao();
+    		if (!Util.stringVaziaOuNula(this.txtCodPessoa.getText())){
+    			p.setCod_pessoa(Integer.parseInt(this.txtCodPessoa.getText()));
+    		}
+    		p.setNome_pessoa(this.txtNomePesoa.getText());
+    		p.setCpf(this.txtCPFPessoa.getText());
+    		p.setData_nascimento(Util.dataF(this.txtDataNascPessoa.getText()));
+    		String s = this.cmbProfPessoa.getSelectionModel().getSelectedItem();
+    		p.setCod_profissao(this.objProfissao(s).getCod_profissao());
+    		boolean retorno = pD.alteraPessoa(p);
+    		if(retorno){
+    			Util.mensagemInformacao("Alteração realizada com sucesso!");
+    		}else{
+    			Util.mensagemErro("Erro, alteração não pode ser feita!");
+    		}
+    	}else{
+    		Util.mensagemErro(msg);
+    	}
+    	this.limpaTela();
     }
 
     @FXML
     void onActionBtnExcluirPessoa(ActionEvent event) {
-
+    	if(Util.stringVaziaOuNula(this.txtCodPessoa.getText())){
+    		Util.mensagemErro("Selecione uma pessoa!");
+    	}else{
+    		Pessoas p = new Pessoas();
+    		PessoaDao pD = new PessoaDao();
+    		if(!Util.stringVaziaOuNula(this.txtCodPessoa.getText())){
+    			p.setCod_pessoa(Integer.parseInt(this.txtCodPessoa.getText()));
+    		}
+    		boolean retorno = pD.excluiPessoa(p);
+    		if(retorno){
+    			Util.mensagemInformacao("Exclusão realizada com sucesso!");
+    		}else{
+    			Util.mensagemErro("Erro durante exclusão!");
+    		}
+    	}
+    	this.limpaTela();
     }
 
     @FXML
     void onActionBtnIncluirPessoa(ActionEvent event) {
-
+    	String msg = "";
+    	if(Util.stringVaziaOuNula(this.txtNomePesoa.getText())){
+    		msg = "Informe o nome da pessoa";
+    	}
+    	if(Util.stringVaziaOuNula(this.txtCPFPessoa.getText())){
+    		msg += "Informe o cpf da pessoa";
+    	}
+    	if(Util.stringVaziaOuNula(this.txtDataNascPessoa.getText())){
+    		msg += "Informe o cpf da pessoa";
+    	}
+    	if(msg.equals("")){
+    		Pessoas p = new Pessoas();
+    		PessoaDao pD = new PessoaDao();
+    		Profissoes pf = new Profissoes();
+    		if (!Util.stringVaziaOuNula(this.txtCodPessoa.getText())){
+    			p.setCod_pessoa(Integer.parseInt(this.txtCodPessoa.getText()));
+    		}
+    		p.setNome_pessoa(this.txtNomePesoa.getText());
+    		p.setCpf(this.txtCPFPessoa.getText());
+    		p.setData_nascimento(Util.dataF(this.txtDataNascPessoa.getText()));
+    		String s = this.cmbProfPessoa.getSelectionModel().getSelectedItem();
+    		if (s == null){
+    			s = this.cmbProfPessoa.getPromptText();
+    		}
+    		pf = this.objProfissao(s);
+    		p.setCod_profissao(pf.getCod_profissao());
+    		int retorno = pD.incluiPessoa(p);
+    		if(retorno == 0){
+    			Util.mensagemErro("Erro na inclusão da pessoa!");
+    		}
+    		if(retorno == 1){
+    			Util.mensagemInformacao("Inclusão realizada com sucesso!");
+    		}
+    		if(retorno == 2){
+    			Util.mensagemInformacao("Pessoa já cadastrada!");
+    		}
+    	}else{
+    		Util.mensagemErro(msg);
+    	}
+    	this.limpaTela();
     }
 
     @FXML
     void onActionLimparPessoa(ActionEvent event) {
-
+    	this.limpaTela();
     }
     
     @FXML
     void onActionBtnConsultarPessoa(ActionEvent event) {
-
+    	String consulta = this.txtNomePesoa.getText();
+    	if(consulta == null){
+    		consulta = "";
+    	}else{
+    		this.preencheCmbBox();
+    		ArrayList<Pessoas> al = new ArrayList<Pessoas>();
+    		ObservableList<Pessoas> ob = FXCollections.observableArrayList(al);
+    		this.tabView.setItems(ob);
+    		PessoaDao pD = new PessoaDao();
+    		al = pD.consultaPorNome(consulta);
+    		ob = FXCollections.observableArrayList(al);
+    		this.tabView.setItems(ob);
+    		this.colCodPessoa.setCellValueFactory(new PropertyValueFactory<Pessoas, Integer>("cod_pessoa"));
+    		this.colNomePessoa.setCellValueFactory(new PropertyValueFactory<Pessoas, String>("nome_pessoa"));
+    	}
     }
+    
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
@@ -134,19 +234,6 @@ public class PessoasController implements Initializable{
 		}
 	}
 	
-	public void limpaTela(){
-		this.txtCodPessoa.setText("");
-		this.txtCPFPessoa.setText("");
-		this.txtDataNascPessoa.setText("");
-		this.txtNomePesoa.setText("");
-		this.txtPesquisaPessoa.setText("");
-		preencheCmbBox();
-		this.cmbProfPessoa.setPromptText(null);
-		ArrayList<Pessoas> a = new ArrayList<Pessoas>();
-		ObservableList<Pessoas> o = FXCollections.observableArrayList(a);
-		this.tabView.setItems(o);
-	}
-	
 	public void preencheTabCadastro(Pessoas p)throws SQLException{
 		Profissoes pf = new Profissoes();
 		ProfissaoDao pfD = new ProfissaoDao();
@@ -164,8 +251,32 @@ public class PessoasController implements Initializable{
 		this.txtCodPessoa.setText(Integer.toString(p.getCod_pessoa()));
 		this.txtCPFPessoa.setText(p.getCpf());
 		this.txtNomePesoa.setText(p.getNome_pessoa());
-		//this.txtDataNascPessoa.setText(Date.parse(p.getData_nascimento()));
+		this.txtDataNascPessoa.setText(Util.dataBarra(p.getData_nascimento()));
+		SingleSelectionModel<Tab> selectionModel = this.tabPane.getSelectionModel();
+		selectionModel.select(this.tabCadastro);
 	}
-
-
+	
+	public Profissoes objProfissao(String s){
+		Profissoes p = new Profissoes();
+		ProfissaoDao pD = new ProfissaoDao();
+		try{
+			p = pD.consultaPorProfissao(s);
+		}catch (Exception e) {
+			Util.mensagemErro("Erro: "+e.getMessage());
+		}
+		return p;
+	}
+	
+	public void limpaTela(){
+		this.txtCodPessoa.setText("");
+		this.txtCPFPessoa.setText("");
+		this.txtDataNascPessoa.setText("");
+		this.txtNomePesoa.setText("");
+		this.txtPesquisaPessoa.setText("");
+		preencheCmbBox();
+		this.cmbProfPessoa.setPromptText(null);
+		ArrayList<Pessoas> a = new ArrayList<Pessoas>();
+		ObservableList<Pessoas> o = FXCollections.observableArrayList(a);
+		this.tabView.setItems(o);
+	}
 }
