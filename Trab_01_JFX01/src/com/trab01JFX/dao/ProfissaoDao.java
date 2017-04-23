@@ -55,6 +55,45 @@ public class ProfissaoDao {
 		return alP;
 	}
 	
+	public Profissoes consultaPorId(int id){
+		Profissoes p = new Profissoes();
+		String sql = null;
+		try{
+			sql = "SELECT * FROM tb_profissoes WHERE cod_profissao= "+id;
+			st = conn.createStatement();
+			rs = st.executeQuery(sql);
+			if(rs.next()){
+				p = new Profissoes();
+				p.setCod_profissao(rs.getInt("cod_profissao"));
+				p.setDescricao(rs.getString("descricao"));
+			}else{
+				p = null;
+			}
+		}catch (SQLException e) {
+			Util.mensagemErro("Erro: "+e.getMessage());
+		}
+		return p;
+	}
+	
+	//Lista todas as Profissões
+	public ArrayList<Profissoes> lista(){
+		Profissoes p;
+		ArrayList<Profissoes> alP = new ArrayList<Profissoes>();
+		try{
+			st = conn.createStatement();
+			rs = st.executeQuery("SELECT * FROM tb_profissoes ORDER BY descricao");
+			while(rs.next()){
+				p = new Profissoes();
+				p.setCod_profissao(rs.getInt("cod_profissao"));
+				p.setDescricao(rs.getString("descricao"));
+				alP.add(p);
+			}
+		}catch (Exception e) {
+			Util.mensagemErro("Erro: "+e.getMessage());
+		}
+		return alP;
+	}
+	
 	//Lista Profissão por Nome
 	public Profissoes consultaPorProfissao(String profissao){
 		Profissoes p = new Profissoes();
@@ -99,7 +138,7 @@ public class ProfissaoDao {
 	public int incluiProfissao(Profissoes profissao){
 		int retorno = 0;
 		String sql = null;
-		if(this.consultaProfissao(profissao.getDescricao())==1){
+		if(this.consultaProfissao(profissao.getDescricao().trim())==1){
 			Util.mensagemErro("Profissão já cadastrada!");
 			retorno = 2;
 		}else{

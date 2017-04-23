@@ -4,7 +4,10 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import com.trab01JFX.dao.PessoaDao;
 import com.trab01JFX.dao.ProfissaoDao;
+import com.trab01JFX.modelo.Pessoas;
 import com.trab01JFX.modelo.Profissoes;
 import com.trab01JFX.util.Util;
 import javafx.beans.value.ChangeListener;
@@ -124,16 +127,22 @@ public class ProfissoesController implements Initializable{
     	}else{
     		Profissoes p = new Profissoes();
     		ProfissaoDao pD = new ProfissaoDao();
-    		
-    		if(!Util.stringVaziaOuNula(this.txtCodProfissao.getText())){
-    			p.setCod_profissao(Integer.parseInt(this.txtCodProfissao.getText()));
-    		}
-    		p.setDescricao(this.txtDesProfissao.getText());
-    		boolean retorno = pD.excluiProfissao(p);
-    		if (retorno){
-    			Util.mensagemInformacao("Exclusão realizada com sucesso!");
+    		PessoaDao peD = new PessoaDao();
+    		ArrayList<Pessoas> alPe = new ArrayList<Pessoas>();
+    		alPe = peD.consultaPorId(p.getCod_profissao());
+    		if(alPe.size()>0){
+    			Util.mensagemErro("Essa profissão não pode ser excluída, pois possui vinculos!");
     		}else{
-    			Util.mensagemErro("Erro na exclusão");
+    			if(!Util.stringVaziaOuNula(this.txtCodProfissao.getText())){
+    				p.setCod_profissao(Integer.parseInt(this.txtCodProfissao.getText()));
+    			}
+    			p.setDescricao(this.txtDesProfissao.getText());
+    			boolean retorno = pD.excluiProfissao(p);
+    			if (retorno){
+    				Util.mensagemInformacao("Exclusão realizada com sucesso!");
+    			}else{
+    				Util.mensagemErro("Erro na exclusão");
+    			}
     		}
     	}
     	this.limpaTela();

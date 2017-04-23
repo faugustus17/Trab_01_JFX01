@@ -7,6 +7,7 @@ public class Pessoas {
 	private String cpf;
 	private String nome_pessoa;
 	private Date data_nascimento;
+	private int cod_profissao;
 	
 	public int getCod_pessoa() {
 		return cod_pessoa;
@@ -33,17 +34,23 @@ public class Pessoas {
 		this.data_nascimento = data_nascimento;
 	}
 	
+	public int getCod_profissao() {
+		return cod_profissao;
+	}
+	public void setCod_profissao(int cod_profissao) {
+		this.cod_profissao = cod_profissao;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + cod_pessoa;
+		result = prime * result + cod_profissao;
 		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
 		result = prime * result + ((data_nascimento == null) ? 0 : data_nascimento.hashCode());
 		result = prime * result + ((nome_pessoa == null) ? 0 : nome_pessoa.hashCode());
 		return result;
 	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -54,6 +61,8 @@ public class Pessoas {
 			return false;
 		Pessoas other = (Pessoas) obj;
 		if (cod_pessoa != other.cod_pessoa)
+			return false;
+		if (cod_profissao != other.cod_profissao)
 			return false;
 		if (cpf == null) {
 			if (other.cpf != null)
