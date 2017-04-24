@@ -78,5 +78,24 @@ public class Util {
 			return null;
 		}
 	}
+	
+	public static Date dataBD(String data){
+		try{
+			SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+			Date dataaux = formato.parse(data);
+			return dataaux;
+		}catch (ParseException e) {
+			Util.mensagemErro("Erro: "+e.getMessage());
+			return null;
+		}
+	}
+	
+	public static String data(String data){
+        return (data.substring(6,10)+"-"+data.substring(3,5)+"-"+data.substring(0,2));
+	}
+	
+	public static String data2(String data){
+        return (data.substring(8,10)+"/"+data.substring(5,7)+"/"+data.substring(0,4));
+	}
 
 }

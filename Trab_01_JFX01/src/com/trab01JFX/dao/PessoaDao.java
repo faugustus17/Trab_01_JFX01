@@ -60,7 +60,7 @@ public class PessoaDao {
 				p.setCod_pessoa(rs.getInt("cod_pessoa"));
 				p.setCpf(rs.getString("cpf"));
 				p.setNome_pessoa(rs.getString("nome_pessoa"));
-				Date data = FORMATADOR.parse(rs.getString("data_nascimento"));
+				Date data = FORMATADOR.parse(Util.data2(rs.getString("data_nascimento")));
 				p.setData_nascimento(data);
 				p.setCod_profissao(rs.getInt("cod_profissao"));
 				alP.add(p);
@@ -87,7 +87,7 @@ public class PessoaDao {
 				p.setCod_pessoa(rs.getInt("cod_pessoa"));
 				p.setCpf(rs.getString("cpf"));
 				p.setNome_pessoa(rs.getString("nome_pessoa"));
-				Date data = FORMATADOR.parse(rs.getString("data_nascimento"));
+				Date data = FORMATADOR.parse(Util.data2(rs.getString("data_nascimento")));
 				p.setData_nascimento(data);
 				p.setCod_profissao(rs.getInt("cod_profissao"));
 				alP.add(p);
@@ -109,10 +109,10 @@ public class PessoaDao {
 			retorno = 2;
 		}else{
 			try{
-				sql = "INSERT INTO tb_pessoas(cpf, nome_pessoa, data_nascimento, cod_profissao VALUES ( '";
+				sql = "INSERT INTO tb_pessoas(cpf, nome_pessoa, data_nascimento, cod_profissao) VALUES ( '";
 				String data = FORMATADOR.format(pessoa.getData_nascimento());
-				sql += pessoa.getCpf()+"'"+"'"+pessoa.getNome_pessoa()+"'"+"'"+data+"'";
-				sql += pessoa.getCod_profissao();
+				sql += pessoa.getCpf()+"', '"+pessoa.getNome_pessoa()+"', '"+Util.data(data)+"' ,";
+				sql += pessoa.getCod_profissao()+")";
 				st = conn.createStatement();
 				int rst = st.executeUpdate(sql);
 				if (rst == 1){
@@ -135,10 +135,10 @@ public class PessoaDao {
 		boolean retorno = false;
 		String sql= null;
 		try{
-			sql = "UPDATE tb_pessoas SET cpf = "+pessoa.getCpf();
-			sql += " nome_pessoa= '"+pessoa.getNome_pessoa()+"'";
+			sql = "UPDATE tb_pessoas SET cpf = '"+pessoa.getCpf()+"', ";
+			sql += " nome_pessoa= '"+pessoa.getNome_pessoa()+"', ";
 			String data = FORMATADOR.format(pessoa.getData_nascimento());
-			sql += " data_nascimento= '"+data+"'";
+			sql += " data_nascimento= '"+Util.data(data)+"', ";
 			sql += " cod_profissao= "+pessoa.getCod_profissao();
 			st = conn.createStatement();
 			int rst = st.executeUpdate(sql);

@@ -98,15 +98,16 @@ public class PessoasController implements Initializable{
     void onActionBtnEditarPessoa(ActionEvent event) {
     	String msg = "";
     	if(Util.stringVaziaOuNula(this.txtNomePesoa.getText())){
-    		msg = "Informe o nome da pessoa";
+    		msg = "Informe o NOME da pessoa";
     	}
     	if(Util.stringVaziaOuNula(this.txtCPFPessoa.getText())){
-    		msg += "Informe o cpf da pessoa";
+    		msg += "\nInforme o CPF da pessoa";
     	}
     	if(Util.stringVaziaOuNula(this.txtDataNascPessoa.getText())){
-    		msg += "Informe o cpf da pessoa";
+    		msg += "\nInforme a DATA DE NASCIMENTO da pessoa";
     	}
     	if(msg.equals("")){
+    		Profissoes pf = new Profissoes();
     		Pessoas p = new Pessoas();
     		PessoaDao pD = new PessoaDao();
     		if (!Util.stringVaziaOuNula(this.txtCodPessoa.getText())){
@@ -116,7 +117,12 @@ public class PessoasController implements Initializable{
     		p.setCpf(this.txtCPFPessoa.getText());
     		p.setData_nascimento(Util.dataF(this.txtDataNascPessoa.getText()));
     		String s = this.cmbProfPessoa.getSelectionModel().getSelectedItem();
-    		p.setCod_profissao(this.objProfissao(s).getCod_profissao());
+    		if (s == null){
+    			s = this.cmbProfPessoa.getPromptText();
+    		}
+    		pf = this.objProfissao(s);
+    		p.setCod_profissao(pf.getCod_profissao());
+    		//p.setCod_profissao(this.objProfissao(s).getCod_profissao());
     		boolean retorno = pD.alteraPessoa(p);
     		if(retorno){
     			Util.mensagemInformacao("Alteração realizada com sucesso!");
@@ -153,13 +159,13 @@ public class PessoasController implements Initializable{
     void onActionBtnIncluirPessoa(ActionEvent event) {
     	String msg = "";
     	if(Util.stringVaziaOuNula(this.txtNomePesoa.getText())){
-    		msg = "Informe o nome da pessoa";
+    		msg = "Informe o NOME da pessoa";
     	}
     	if(Util.stringVaziaOuNula(this.txtCPFPessoa.getText())){
-    		msg += "Informe o cpf da pessoa";
+    		msg += "\nInforme o CPF da pessoa";
     	}
     	if(Util.stringVaziaOuNula(this.txtDataNascPessoa.getText())){
-    		msg += "Informe o cpf da pessoa";
+    		msg += "\nInforme a DATA DE NASCIMENTO da pessoa";
     	}
     	if(msg.equals("")){
     		Pessoas p = new Pessoas();
