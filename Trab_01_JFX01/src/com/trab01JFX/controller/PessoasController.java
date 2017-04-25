@@ -178,8 +178,10 @@ public class PessoasController implements Initializable{
     }
 
     @FXML
-    void onActionBtnIncluirPessoa(ActionEvent event) {
+    void onActionBtnIncluirPessoa(ActionEvent event)throws ParseException {
     	String msg = "";
+    	Validacoes v = new Validacoes();
+    	PessoaDao pD = new PessoaDao();
     	if(Util.stringVaziaOuNula(this.txtNomePesoa.getText())){
     		msg = "Informe o NOME da pessoa";
     	}
@@ -189,9 +191,21 @@ public class PessoasController implements Initializable{
     	if(Util.stringVaziaOuNula(this.txtDataNascPessoa.getText())){
     		msg += "\nInforme a DATA DE NASCIMENTO da pessoa";
     	}
+    	if(!v.validaCPF(this.txtCPFPessoa.getText())){
+    		msg += "\nInforme um CPF válido";
+    	}
+    	if(!v.verificaVencimentoData(this.txtDataNascPessoa.getText())){
+    		msg += "\nInforme uma DATA VÁLIDA";
+    	}
+    	if((v.somaIdade(Util.dataF(this.txtDataNascPessoa.getText()))) < 18){
+    		msg +="\nCadastro permitido somente para maiores de 18 anos";
+    	}
+    	if((pD.consultaCPF(this.txtCPFPessoa.getText())) == 1){
+    		msg +="\nCPF já cadastrado";
+    	}
     	if(msg.equals("")){
     		Pessoas p = new Pessoas();
-    		PessoaDao pD = new PessoaDao();
+    		//PessoaDao pD = new PessoaDao();
     		Profissoes pf = new Profissoes();
     		if (!Util.stringVaziaOuNula(this.txtCodPessoa.getText())){
     			p.setCod_pessoa(Integer.parseInt(this.txtCodPessoa.getText()));
