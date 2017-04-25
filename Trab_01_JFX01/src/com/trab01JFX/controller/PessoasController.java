@@ -256,6 +256,9 @@ public class PessoasController implements Initializable{
     		this.tabView.setItems(ob);
     		this.colCodPessoa.setCellValueFactory(new PropertyValueFactory<Pessoas, Integer>("cod_pessoa"));
     		this.colNomePessoa.setCellValueFactory(new PropertyValueFactory<Pessoas, String>("nome_pessoa"));
+    		if(al.size()==0){
+    			Util.mensagemInformacao("Nome não encontrado ou não cadastrado!");
+    		}
     	}
     }
     

@@ -92,6 +92,9 @@ public class ProfissoesController implements Initializable{
     			this.tabViewPesqProfissao.setItems(ob);
     			this.colCodProfissao.setCellValueFactory(new PropertyValueFactory<Profissoes, Integer>("cod_profissao"));
     			this.colNomeProfissao.setCellValueFactory(new PropertyValueFactory<Profissoes, String>("descricao"));
+    			if(al.size()==0){
+        			Util.mensagemInformacao("Profissão não encontrada ou não cadastrada!");
+        		}
     		}catch (Exception e) {
 				Util.mensagemErro("Erro: "+e.getMessage());
 			}
