@@ -51,12 +51,11 @@ public class LoginController implements Initializable{
     	    	}
     		}else if(retornoUsuario == 2 || retornoSenha == 2){
     			Util.mensagemInformacao("Usuario e/ou Senha não conferem,"
-    					+"/n ou não existem no banco de dados!");
+    					+"\nou Usiário não cadastrado no banco de dados!");
     		}else{
     			Util.mensagemErro("Erro ao logar!");
     		}
     	}
-    	//this.limpaTela();
     }
 
     @FXML
@@ -83,10 +82,7 @@ public class LoginController implements Initializable{
     		}else{
     			Util.mensagemInformacao("Nome: "+nome+", não encontrado!");
     		}
-    		
-    		
     	}
-
     }
     
     public void limpaTela(){

@@ -125,9 +125,6 @@ public class PessoasController implements Initializable{
     	if((v.somaIdade(Util.dataF(this.txtDataNascPessoa.getText()))) < 18){
     		msg +="\nCadastro permitido somente para maiores de 18 anos";
     	}
-    	if((pD.consultaCPF(this.txtCPFPessoa.getText())) == 1){
-    		msg +="\nCPF já cadastrado";
-    	}
     	if(msg.equals("")){
     		Profissoes pf = new Profissoes();
     		Pessoas p = new Pessoas();
@@ -138,13 +135,9 @@ public class PessoasController implements Initializable{
     		p.setNome_pessoa(this.txtNomePesoa.getText());
     		p.setCpf(v.limpaCPF(this.txtCPFPessoa.getText()));
     		p.setData_nascimento(Util.dataF(this.txtDataNascPessoa.getText()));
-    		String s = this.cmbProfPessoa.getSelectionModel().getSelectedItem();
-    		if (s == null){
-    			s = this.cmbProfPessoa.getPromptText();
-    		}
+    		String s = this.cmbProfPessoa.getPromptText();
     		pf = this.objProfissao(s);
     		p.setCod_profissao(pf.getCod_profissao());
-    		//p.setCod_profissao(this.objProfissao(s).getCod_profissao());
     		boolean retorno = pD.alteraPessoa(p);
     		if(retorno){
     			Util.mensagemInformacao("Alteração realizada com sucesso!");
@@ -334,7 +327,7 @@ public class PessoasController implements Initializable{
 	public void preencheTabCadastro(Pessoas p)throws SQLException{
 		Profissoes pf = new Profissoes();
 		ProfissaoDao pfD = new ProfissaoDao();
-		pf = pfD.consultaPorId(p.getCod_pessoa());
+		pf = pfD.consultaPorId(p.getCod_profissao());
 		String descricao = "*";
 		if(pf != null){
 			descricao = pf.getDescricao();
