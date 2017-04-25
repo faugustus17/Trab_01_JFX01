@@ -32,29 +32,40 @@ public class CadUsuarioController implements Initializable{
 
 	@FXML
 	void onActionBtnCadUsuario(ActionEvent event) {
+		String msg = "";
 		Usuarios u = new Usuarios();
 		UsuarioDao uD = new UsuarioDao();
-		
-		u.setNome_usuario(this.txtCadNomeUsuario.getText());
-		u.setUsuario(this.txtCadUsuario.getText());
-		u.setSenha(this.txtCadSenha.getText());
-		
-		int retorno = uD.cadastraUsuario(u);
-		
-		if(retorno == 1){
-			Util.mensagemInformacao("Usuário cadastrado com sucesso!");
-			this.txtCadNomeUsuario.setText("");
-			this.txtCadUsuario.setText("");
-			this.txtCadSenha.setText("");
-			Main.loadScene("/com/trab01JFX/view/Login.fxml", "Tela de Login");
+		if(Util.stringVaziaOuNula(this.txtCadNomeUsuario.getText())){
+			msg ="Informe um NOME";
 		}
-		if(retorno == 0){
-			Util.mensagemErro("Erro na inclusão!");
-			//Main.loadScene("/com/trab01JFX/view/Login.fxml", "Tela de Login");
+		if(Util.stringVaziaOuNula(this.txtCadUsuario.getText())){
+			msg +="Informe um USUARIO";
 		}
-		if(retorno == 2){
-			Util.mensagemInformacao("Usuário ja cadastrado");
-			//Main.loadScene("/com/trab01JFX/view/Login.fxml", "Tela de Login");
+		if(Util.stringVaziaOuNula(this.txtCadSenha.getText())){
+			msg +="Informe uma SENHA";
+		}
+		if(msg.equals("")){
+			u.setNome_usuario(this.txtCadNomeUsuario.getText());
+			u.setUsuario(this.txtCadUsuario.getText());
+			u.setSenha(this.txtCadSenha.getText());
+
+			int retorno = uD.cadastraUsuario(u);
+
+			if(retorno == 1){
+				Util.mensagemInformacao("Usuário cadastrado com sucesso!");
+				this.txtCadNomeUsuario.setText("");
+				this.txtCadUsuario.setText("");
+				this.txtCadSenha.setText("");
+				Main.loadScene("/com/trab01JFX/view/Login.fxml", "Tela de Login");
+			}
+			if(retorno == 0){
+				Util.mensagemErro("Erro na inclusão!");
+			}
+			if(retorno == 2){
+				Util.mensagemInformacao("Usuário ja cadastrado");
+			}
+		}else{
+			Util.mensagemErro(msg);
 		}
 	}
 	
@@ -62,7 +73,6 @@ public class CadUsuarioController implements Initializable{
     void onActionBtnVoltar(ActionEvent event) {
 		Main.loadScene("/com/trab01JFX/view/Login.fxml", "Tela de Login");
     }
-
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
