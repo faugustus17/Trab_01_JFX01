@@ -2,13 +2,20 @@ package com.trab01JFX.controller;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
+
 import com.trab01JFX.dao.PessoaDao;
 import com.trab01JFX.dao.ProfissaoDao;
 import com.trab01JFX.modelo.Pessoas;
 import com.trab01JFX.modelo.Profissoes;
 import com.trab01JFX.util.Util;
+import com.trab01JFX.util.Validacoes;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -43,6 +50,7 @@ public class PessoasController implements Initializable{
 
     @FXML
     private TextField txtNomePesoa;
+    
 
     @FXML
     private TextField txtCPFPessoa;
@@ -95,8 +103,10 @@ public class PessoasController implements Initializable{
     }
 
     @FXML
-    void onActionBtnEditarPessoa(ActionEvent event) {
+    void onActionBtnEditarPessoa(ActionEvent event)throws ParseException {
     	String msg = "";
+    	Validacoes v = new Validacoes();
+    	PessoaDao pD = new PessoaDao();
     	if(Util.stringVaziaOuNula(this.txtNomePesoa.getText())){
     		msg = "Informe o NOME da pessoa";
     	}
@@ -106,15 +116,27 @@ public class PessoasController implements Initializable{
     	if(Util.stringVaziaOuNula(this.txtDataNascPessoa.getText())){
     		msg += "\nInforme a DATA DE NASCIMENTO da pessoa";
     	}
+    	if(!v.validaCPF(this.txtCPFPessoa.getText())){
+    		msg += "\nInforme um CPF válido";
+    	}
+    	if(!v.verificaVencimentoData(this.txtDataNascPessoa.getText())){
+    		msg += "\nInforme uma DATA VÁLIDA";
+    	}
+    	if((v.somaIdade(Util.dataF(this.txtDataNascPessoa.getText()))) < 18){
+    		msg +="\nCadastro permitido somente para maiores de 18 anos";
+    	}
+    	if((pD.consultaCPF(this.txtCPFPessoa.getText())) == 1){
+    		msg +="\nCPF já cadastrado";
+    	}
     	if(msg.equals("")){
     		Profissoes pf = new Profissoes();
     		Pessoas p = new Pessoas();
-    		PessoaDao pD = new PessoaDao();
+    		//PessoaDao pD = new PessoaDao();
     		if (!Util.stringVaziaOuNula(this.txtCodPessoa.getText())){
     			p.setCod_pessoa(Integer.parseInt(this.txtCodPessoa.getText()));
     		}
     		p.setNome_pessoa(this.txtNomePesoa.getText());
-    		p.setCpf(this.txtCPFPessoa.getText());
+    		p.setCpf(v.limpaCPF(this.txtCPFPessoa.getText()));
     		p.setData_nascimento(Util.dataF(this.txtDataNascPessoa.getText()));
     		String s = this.cmbProfPessoa.getSelectionModel().getSelectedItem();
     		if (s == null){
@@ -269,6 +291,13 @@ public class PessoasController implements Initializable{
 				}
 			}
 		});
+		
+		this.txtNomePesoa.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				txtNomePesoa.setText(newValue.toUpperCase());			
+			}
+		});
 	}
 	
 	public void preencheCmbBox() {
@@ -330,4 +359,22 @@ public class PessoasController implements Initializable{
 		ObservableList<Pessoas> o = FXCollections.observableArrayList(a);
 		this.tabView.setItems(o);
 	}
+	
+	public class UpcaseDocument extends PlainDocument{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public UpcaseDocument(){
+			super();
+		}
+
+		@Override
+		public void insertString(int an_length, String as_character, AttributeSet ao_attribute)
+		throws BadLocationException{
+			super.insertString(an_length, as_character.toUpperCase(), ao_attribute);
+		}
+	}
 }
+

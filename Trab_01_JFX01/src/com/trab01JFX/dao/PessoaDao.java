@@ -40,6 +40,26 @@ public class PessoaDao {
 		}
 	}
 	
+	//Consulta se CPF ja existe no BD
+	public int consultaCPF(String cpf){
+		int retorno = 0;
+		try{
+			st = conn.createStatement();
+			rs = st.executeQuery("SELECT * FROM tb_pessoas WHERE cpf = '"+cpf+"'");
+			if(rs.next()){
+				//CPF já cadastrado
+				retorno = 1;
+			}else{
+				//CPF não encontrado
+				retorno = 2;
+			}
+			return retorno;
+		}catch (SQLException e) {
+			Util.mensagemErro("Erro: "+e.getMessage()+"    Cod: "+e.getErrorCode());
+			return retorno;
+		}
+	}
+	
 	//Consulta e retorna uma coleção de pessoas cadastradas
 	public ArrayList<Pessoas> consultaPorNome(String nome){
 		Pessoas p;

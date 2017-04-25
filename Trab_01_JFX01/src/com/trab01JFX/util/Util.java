@@ -4,9 +4,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.swing.JOptionPane;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
@@ -97,5 +95,5 @@ public class Util {
 	public static String data2(String data){
         return (data.substring(8,10)+"/"+data.substring(5,7)+"/"+data.substring(0,4));
 	}
-
+	
 }
