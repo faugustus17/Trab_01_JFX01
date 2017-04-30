@@ -20,7 +20,7 @@ public class ProfissaoDao {
 		int retorno = 0;
 		try{
 			st = conn.createStatement();
-			rs = st.executeQuery("SELECT * FROM tb_profissoes WHERE descricao LIKE '%"+profissao+"'");
+			rs = st.executeQuery("SELECT * FROM tb_profissoes WHERE descricao LIKE '"+profissao+"'");
 			if(rs.next()){
 				//Profissão ja cadastrada
 				retorno = 1;
@@ -42,7 +42,7 @@ public class ProfissaoDao {
 		ArrayList<Profissoes> alP = new ArrayList<Profissoes>();
 		try{
 			st = conn.createStatement();
-			rs = st.executeQuery("SELECT * FROM tb_profissoes WHERE descricao LIKE '%"+descricao+"' ORDER BY descricao");
+			rs = st.executeQuery("SELECT * FROM tb_profissoes WHERE descricao LIKE '%"+descricao+"%' ORDER BY descricao");
 			while(rs.next()){
 				p = new Profissoes();
 				p.setCod_profissao(rs.getInt("cod_profissao"));
@@ -100,7 +100,7 @@ public class ProfissaoDao {
 		String sql = null;
 		try{
 			st = conn.createStatement();
-			sql = "SELECT * FROM tb_profissoes WHERE descricao LIKE '%"+profissao+"'";
+			sql = "SELECT * FROM tb_profissoes WHERE descricao LIKE '%"+profissao+"%'";
 			rs = st.executeQuery(sql);
 			if(rs.next()){
 				p.setCod_profissao(rs.getInt("cod_profissao"));
@@ -120,7 +120,7 @@ public class ProfissaoDao {
 		String sql = null;
 		try{
 			st = conn.createStatement();
-			sql = "SELECT * FROM tb_profissoes WHERE cod_profissao ="+codigo;
+			sql = "SELECT * FROM tb_profissoes WHERE cod_profissao = "+codigo;
 			rs = st.executeQuery(sql);
 			if(rs.next()){
 				p.setCod_profissao(rs.getInt("cod_profissao"));
@@ -175,7 +175,7 @@ public class ProfissaoDao {
 				retorno = false;
 			}
 		}catch (SQLException e){
-			Util.mensagemErro("Erro ao cadastrar profissão: "+e.getMessage()+"   Cod: "+e.getSQLState());
+			Util.mensagemErro("Erro ao alterar profissão: "+e.getMessage()+"   Cod: "+e.getSQLState());
 			return retorno;
 		}
 		return retorno;
@@ -195,7 +195,7 @@ public class ProfissaoDao {
 				retorno = false;
 			}
 		}catch (SQLException e){
-			Util.mensagemErro("Erro ao cadastrar profissão: "+e.getMessage()+"   Cod: "+e.getSQLState());
+			Util.mensagemErro("Erro ao excluir profissão: "+e.getMessage()+"   Cod: "+e.getSQLState());
 			return retorno;
 		}
 		return retorno;

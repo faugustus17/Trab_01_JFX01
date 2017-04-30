@@ -36,6 +36,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 
 public class PessoasController implements Initializable{
+	int OK=0;
+	
 	@FXML
     private TabPane tabPane;
 	
@@ -51,7 +53,6 @@ public class PessoasController implements Initializable{
     @FXML
     private TextField txtNomePesoa;
     
-
     @FXML
     private TextField txtCPFPessoa;
 
@@ -141,13 +142,18 @@ public class PessoasController implements Initializable{
     		boolean retorno = pD.alteraPessoa(p);
     		if(retorno){
     			Util.mensagemInformacao("Alteração realizada com sucesso!");
+    			OK = 1;
     		}else{
     			Util.mensagemErro("Erro, alteração não pode ser feita!");
+    			OK = 0;
     		}
     	}else{
     		Util.mensagemErro(msg);
+    		OK = 0;
     	}
-    	this.limpaTela();
+    	if(OK == 1){
+    		this.limpaTela();
+    	}
     }
 
     @FXML
@@ -215,17 +221,22 @@ public class PessoasController implements Initializable{
     		int retorno = pD.incluiPessoa(p);
     		if(retorno == 0){
     			Util.mensagemErro("Erro na inclusão da pessoa!");
+    			OK = 0;
     		}
     		if(retorno == 1){
     			Util.mensagemInformacao("Inclusão realizada com sucesso!");
+    			OK = 1;
     		}
     		if(retorno == 2){
     			Util.mensagemInformacao("Pessoa já cadastrada!");
+    			OK = 0;
     		}
     	}else{
     		Util.mensagemErro(msg);
     	}
-    	this.limpaTela();
+    	if(OK == 1){
+    		this.limpaTela();
+    	}
     }
 
     @FXML
@@ -364,7 +375,7 @@ public class PessoasController implements Initializable{
 		this.txtNomePesoa.setText("");
 		this.txtPesquisaPessoa.setText("");
 		preencheCmbBox();
-		this.cmbProfPessoa.setPromptText(null);
+		this.cmbProfPessoa.setPromptText("");
 		ArrayList<Pessoas> a = new ArrayList<Pessoas>();
 		ObservableList<Pessoas> o = FXCollections.observableArrayList(a);
 		this.tabView.setItems(o);

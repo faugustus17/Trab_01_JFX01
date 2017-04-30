@@ -96,4 +96,29 @@ public class Util {
         return (data.substring(8,10)+"/"+data.substring(5,7)+"/"+data.substring(0,4));
 	}
 	
+	public static String rsDataBD(Date data){
+		String dataBarra;
+		String dt;
+		String FORMATO_DATA = "dd/MM/yyyy";
+		SimpleDateFormat FORMATADOR = new SimpleDateFormat(FORMATO_DATA);
+		dataBarra = FORMATADOR.format(data);
+		dt = Util.data(dataBarra);
+		return dt;
+	}
+	
+	
+	public static Date rsData(String data){
+		String dataBarra;
+		Date dt;
+		String FORMATO_DATA = "dd/MM/yyyy";
+		SimpleDateFormat FORMATADOR = new SimpleDateFormat(FORMATO_DATA);
+		dataBarra = (data.substring(8,10)+"/"+data.substring(5,7)+"/"+data.substring(0,4));
+		try{
+			dt = FORMATADOR.parse(dataBarra);
+			return dt;
+		}catch(ParseException e){
+			Util.mensagemErro("Erro: "+e.getMessage());
+			return null;
+		}
+	}
 }

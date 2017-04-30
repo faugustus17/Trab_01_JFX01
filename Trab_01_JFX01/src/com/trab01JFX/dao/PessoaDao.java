@@ -3,10 +3,7 @@ package com.trab01JFX.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import com.mysql.jdbc.Connection;
 import com.trab01JFX.modelo.Pessoas;
 import com.trab01JFX.util.Util;
@@ -17,15 +14,12 @@ public class PessoaDao {
 	ResultSet rs = null;
 	Statement st = null;
 	
-	String FORMATO_DATA = "dd/MM/yyyy";
-	SimpleDateFormat FORMATADOR = new SimpleDateFormat(FORMATO_DATA);
-	
 	//Consulta se Pessoa ja existe no BD
 	public int consultaPessoa(String nome){
 		int retorno = 0;
 		try{
 			st = conn.createStatement();
-			rs = st.executeQuery("SELECT * FROM tb_pessoas WHERE nome_pessoa LIKE '%"+nome+"'");
+			rs = st.executeQuery("SELECT * FROM tb_pessoas WHERE nome_pessoa LIKE '"+nome+"'");
 			if(rs.next()){
 				//Pessoa já cadastrada
 				retorno = 1;
@@ -69,7 +63,7 @@ public class PessoaDao {
 			sql = "SELECT * FROM tb_pessoas ORDER BY nome_pessoa";
 		}else{
 			sql = "SELECT * FROM tb_pessoas WHERE nome_pessoa LIKE '%";
-			sql = nome+"' ORDER BY nome_pessoa";	
+			sql = nome+"%' ORDER BY nome_pessoa";	
 		}
 		ArrayList<Pessoas> alP = new ArrayList<Pessoas>();
 		try{
@@ -80,14 +74,11 @@ public class PessoaDao {
 				p.setCod_pessoa(rs.getInt("cod_pessoa"));
 				p.setCpf(rs.getString("cpf"));
 				p.setNome_pessoa(rs.getString("nome_pessoa"));
-				Date data = FORMATADOR.parse(Util.data2(rs.getString("data_nascimento")));
-				p.setData_nascimento(data);
+				p.setData_nascimento(Util.rsData(rs.getString("data_nascimento")));
 				p.setCod_profissao(rs.getInt("cod_profissao"));
 				alP.add(p);
 			}
 		}catch (SQLException e) {
-			Util.mensagemErro("Erro: "+e.getMessage());
-		}catch (ParseException e) {
 			Util.mensagemErro("Erro: "+e.getMessage());
 		}
 		return alP;
@@ -107,14 +98,11 @@ public class PessoaDao {
 				p.setCod_pessoa(rs.getInt("cod_pessoa"));
 				p.setCpf(rs.getString("cpf"));
 				p.setNome_pessoa(rs.getString("nome_pessoa"));
-				Date data = FORMATADOR.parse(Util.data2(rs.getString("data_nascimento")));
-				p.setData_nascimento(data);
+				p.setData_nascimento(Util.rsData(rs.getString("data_nascimento")));
 				p.setCod_profissao(rs.getInt("cod_profissao"));
 				alP.add(p);
 			}
 		}catch (SQLException e) {
-			Util.mensagemErro("Erro: "+e.getMessage());
-		}catch (ParseException e) {
 			Util.mensagemErro("Erro: "+e.getMessage());
 		}
 		return alP;
@@ -130,8 +118,7 @@ public class PessoaDao {
 		}else{
 			try{
 				sql = "INSERT INTO tb_pessoas(cpf, nome_pessoa, data_nascimento, cod_profissao) VALUES ( '";
-				String data = FORMATADOR.format(pessoa.getData_nascimento());
-				sql += pessoa.getCpf()+"', '"+pessoa.getNome_pessoa()+"', '"+Util.data(data)+"' ,";
+				sql += pessoa.getCpf()+"', '"+pessoa.getNome_pessoa()+"', '"+Util.rsDataBD(pessoa.getData_nascimento())+"' ,";
 				sql += pessoa.getCod_profissao()+")";
 				st = conn.createStatement();
 				int rst = st.executeUpdate(sql);
@@ -157,9 +144,8 @@ public class PessoaDao {
 		try{
 			sql = "UPDATE tb_pessoas SET cpf = '"+pessoa.getCpf()+"', ";
 			sql += " nome_pessoa= '"+pessoa.getNome_pessoa()+"', ";
-			String data = FORMATADOR.format(pessoa.getData_nascimento());
-			sql += " data_nascimento= '"+Util.data(data)+"', ";
-			sql += " cod_profissao= "+pessoa.getCod_profissao();
+			sql += " data_nascimento= '"+Util.rsDataBD(pessoa.getData_nascimento())+"', ";
+			sql += " cod_profissao= "+pessoa.getCod_profissao() + " WHERE cod_pessoa = "+pessoa.getCod_pessoa();
 			st = conn.createStatement();
 			int rst = st.executeUpdate(sql);
 			if (rst == 1){
@@ -170,7 +156,7 @@ public class PessoaDao {
 				retorno = false;
 			}
 		}catch (SQLException e) {
-			Util.mensagemErro("Erro ao cadastrar pessoa: "+e.getMessage()+"   Cod: "+e.getErrorCode());
+			Util.mensagemErro("Erro ao alterar pessoa: "+e.getMessage()+"   Cod: "+e.getErrorCode());
 			return retorno;
 		}
 		return retorno;	
@@ -192,7 +178,7 @@ public class PessoaDao {
 				retorno = false;
 			}
 		}catch (SQLException e) {
-			Util.mensagemErro("Erro ao cadastrar pessoa: "+e.getMessage()+"   Cod: "+e.getErrorCode());
+			Util.mensagemErro("Erro ao excluir pessoa: "+e.getMessage()+"   Cod: "+e.getErrorCode());
 			return retorno;
 		}	
 		return retorno;
