@@ -63,7 +63,7 @@ public class PessoaDao {
 			sql = "SELECT * FROM tb_pessoas ORDER BY nome_pessoa";
 		}else{
 			sql = "SELECT * FROM tb_pessoas WHERE nome_pessoa LIKE '%";
-			sql = nome+"%' ORDER BY nome_pessoa";	
+			sql += nome+"%' ORDER BY nome_pessoa";	
 		}
 		ArrayList<Pessoas> alP = new ArrayList<Pessoas>();
 		try{

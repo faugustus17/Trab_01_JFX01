@@ -36,8 +36,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 
 public class PessoasController implements Initializable{
-	int OK=0;
-	
 	@FXML
     private TabPane tabPane;
 	
@@ -142,17 +140,12 @@ public class PessoasController implements Initializable{
     		boolean retorno = pD.alteraPessoa(p);
     		if(retorno){
     			Util.mensagemInformacao("Alteração realizada com sucesso!");
-    			OK = 1;
+    			this.limpaTela();
     		}else{
     			Util.mensagemErro("Erro, alteração não pode ser feita!");
-    			OK = 0;
     		}
     	}else{
     		Util.mensagemErro(msg);
-    		OK = 0;
-    	}
-    	if(OK == 1){
-    		this.limpaTela();
     	}
     }
 
@@ -202,9 +195,8 @@ public class PessoasController implements Initializable{
     	if((pD.consultaCPF(this.txtCPFPessoa.getText())) == 1){
     		msg +="\nCPF já cadastrado";
     	}
-    	if(msg.equals("")){
+    	if(msg.equals("") || msg.length() == 0){
     		Pessoas p = new Pessoas();
-    		//PessoaDao pD = new PessoaDao();
     		Profissoes pf = new Profissoes();
     		if (!Util.stringVaziaOuNula(this.txtCodPessoa.getText())){
     			p.setCod_pessoa(Integer.parseInt(this.txtCodPessoa.getText()));
@@ -221,21 +213,16 @@ public class PessoasController implements Initializable{
     		int retorno = pD.incluiPessoa(p);
     		if(retorno == 0){
     			Util.mensagemErro("Erro na inclusão da pessoa!");
-    			OK = 0;
+    			this.limpaTela();
     		}
     		if(retorno == 1){
     			Util.mensagemInformacao("Inclusão realizada com sucesso!");
-    			OK = 1;
     		}
     		if(retorno == 2){
     			Util.mensagemInformacao("Pessoa já cadastrada!");
-    			OK = 0;
     		}
     	}else{
     		Util.mensagemErro(msg);
-    	}
-    	if(OK == 1){
-    		this.limpaTela();
     	}
     }
 
@@ -317,6 +304,66 @@ public class PessoasController implements Initializable{
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				txtNomePesoa.setText(newValue.toUpperCase());			
+			}
+		});
+		
+		this.txtCPFPessoa.lengthProperty().addListener(new ChangeListener<Number>(){
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				String mascara = "###.###.###-##";
+				String alphaAndDigits = txtCPFPessoa.getText().replaceAll("[\\-\\.]", "");
+				StringBuilder resultado = new StringBuilder();
+				int i = 0;
+				int quant = 0;
+				if(arg2.intValue() > arg1.intValue()){
+					if(txtCPFPessoa.getText().length() <= mascara.length()){
+						while(i<mascara.length()){
+							if(quant < alphaAndDigits.length()){
+								if("#".equals(mascara.substring(i, i+1))){
+									resultado.append(alphaAndDigits.substring(quant, quant+1));
+									quant++;
+								}else{
+									resultado.append(mascara.substring(i, i+1));
+								}
+							}
+							i++;
+						}
+						txtCPFPessoa.setText(resultado.toString());
+					}
+					if(txtCPFPessoa.getText().length() > mascara.length()){
+						txtCPFPessoa.setText(txtCPFPessoa.getText(0, mascara.length()));
+					}
+				}
+			}
+		});
+		
+		this.txtDataNascPessoa.lengthProperty().addListener(new ChangeListener<Number>(){
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				String mascara = "##/##/####";
+				String alphaAndDigits = txtDataNascPessoa.getText().replaceAll("/", "");
+				StringBuilder resultado = new StringBuilder();
+				int i = 0;
+				int quant = 0;
+				if(arg2.intValue() > arg1.intValue()){
+					if(txtDataNascPessoa.getText().length() <= mascara.length()){
+						while(i<mascara.length()){
+							if(quant < alphaAndDigits.length()){
+								if("#".equals(mascara.substring(i, i+1))){
+									resultado.append(alphaAndDigits.substring(quant, quant+1));
+									quant++;
+								}else{
+									resultado.append(mascara.substring(i, i+1));
+								}
+							}
+							i++;
+						}
+						txtDataNascPessoa.setText(resultado.toString());
+					}
+					if(txtDataNascPessoa.getText().length() > mascara.length()){
+						txtDataNascPessoa.setText(txtDataNascPessoa.getText(0, mascara.length()));
+					}
+				}
 			}
 		});
 	}
