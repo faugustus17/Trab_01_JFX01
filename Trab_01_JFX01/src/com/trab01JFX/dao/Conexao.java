@@ -7,7 +7,7 @@ import com.mysql.jdbc.Connection;
 public class Conexao {
 	//usuario e senha
 	private String login = "root";
-	private String senha = "faag";
+	private String senha = "XXXX";
 	// IP do servidor do banco
 	private String host = "localhost";
 	// Nome do banco de dados
